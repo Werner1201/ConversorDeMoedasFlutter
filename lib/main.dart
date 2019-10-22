@@ -33,7 +33,44 @@ class _HomeState extends State<Home> {
         backgroundColor: Colors.amber,
         centerTitle: true,
       ),
-      body: ,
+      //FutureBuilder vai mostrar algo na tela enquanto o Map do getData() eh resolvido
+      body: FutureBuilder<Map>(
+        future: getData(),
+        builder: (context, snapshot){
+          //Aqui caso o estado da conexao seja ou esperando ou nada ele vai mostrar que esta carregando
+            switch(snapshot.connectionState){
+              case ConnectionState.none:
+              case ConnectionState.waiting:
+                return Center(
+                  child: Text(
+                      "Carregando Dados...",
+                    style: TextStyle(
+                      color: Colors.amber,
+                      fontSize: 25.0
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                );
+                //Caso normalmente tenha erro, vai mostrar erro
+              default:
+                if(snapshot.hasError){
+                  return Center(
+                    child: Text(
+                      "Erro ao Carregar Dados :(",
+                      style: TextStyle(
+                          color: Colors.amber,
+                          fontSize: 25.0
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  );
+                }else{
+                  //Se nao tiver erro vai mostrar os dados
+                  return Container(color: Colors.green,);
+                }
+            }
+        },
+      ),
     );
   }
 }
